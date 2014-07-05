@@ -1,0 +1,16 @@
+1：id1
+2: id2
+3: id1向id2播出的电话次数
+4：id1向id2播出电话总时长
+5：id1接到id2电话次数
+6：id1接到id2电话次数
+7：id1向id2发出的短信次数
+8：id1收到id2的短信次数
+9：在weekday的daytime且地点不在学校（off-campus）id1蓝牙扫描到id2次数
+10：在weekday的daytime且地点在学校（on-campus）id1蓝牙扫描到id2次数
+11：在weekday的night且地点不在学校（off-campus）id1蓝牙扫描到id2次数
+12：在weekday的night且地点在学校（on-campus）id1蓝牙扫描到id2次数
+13：在weekend的night且地点不在学校（off-campus）id1蓝牙扫描到id2次数
+14：在weekend的daytime且地点在学校（on-campus）id1蓝牙扫描到id2次数
+15: 在weekend的night且地点不在学校（off-campus）id1蓝牙扫描到id2次数
+16：在weekend的night且地点在学校（on-campus）id1蓝牙扫描到id2次数

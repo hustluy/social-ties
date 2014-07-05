@@ -1,0 +1,49 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BayesMark	main.cpp	/^vector<Pred> BayesMark(NaiveBayesClassifier& nbc,$/;"	f
+CoTrain	main.cpp	/^pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& train, $/;"	f
+CrossValidation	main.cpp	/^void CrossValidation(int folds)$/;"	f
+InitSVMPara	main.cpp	/^svm_parameter InitSVMPara(const svm_problem& svmPro,$/;"	f
+InitSVMPro	main.cpp	/^svm_problem InitSVMPro(const vector<vector<double> >& inst)$/;"	f
+Inst2SVMNode	main.cpp	/^void Inst2SVMNode(const vector<double>& single, svm_node*& nodePtr)$/;"	f
+LoadData	main.cpp	/^void LoadData(const char* file, vector<vector<double> >& inst)$/;"	f
+NAIVE_BAYES_H	naiveBayes.h	2;"	d
+NaiveBayesClassifier	naiveBayes.h	/^        NaiveBayesClassifier(const vector<vector<double> >& _inst, $/;"	f	class:NaiveBayesClassifier
+NaiveBayesClassifier	naiveBayes.h	/^class NaiveBayesClassifier {$/;"	c
+Pred	main.cpp	/^    Pred(int _index, int _label, double _prob) {$/;"	f	struct:Pred
+Pred	main.cpp	/^struct Pred {$/;"	s	file:
+SVMMark	main.cpp	/^vector<Pred> SVMMark(svm_model* svmPtr,$/;"	f
+Test	main.cpp	/^void Test()$/;"	f
+TestCoModel	main.cpp	/^void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,$/;"	f
+TopK	main.cpp	/^vector<Pred> TopK(const vector<Pred>& pred, double thresh)$/;"	f
+TopK	main.cpp	/^vector<Pred> TopK(const vector<Pred>& pred, int k)$/;"	f
+UpdateBayes	main.cpp	/^NaiveBayesClassifier UpdateBayes(const vector<vector<double> >& train,$/;"	f
+UpdateData	main.cpp	/^void UpdateData(vector<vector<double> >& train, vector<vector<double> >& test,$/;"	f
+UpdateSVM	main.cpp	/^svm_model UpdateSVM(const vector<vector<double> >& train, $/;"	f
+Work	main.cpp	/^void Work()$/;"	f
+XX	test.cpp	/^    XX(int _x):x(_x){$/;"	f	struct:XX
+XX	test.cpp	/^struct XX {$/;"	s	file:
+calculateProb	naiveBayes.cpp	/^pair<double, double> NaiveBayesClassifier::calculateProb(const vector<double>& single)$/;"	f	class:NaiveBayesClassifier
+classify	naiveBayes.h	/^        int classify(const vector<double>& single) {$/;"	f	class:NaiveBayesClassifier
+debug	naiveBayes.cpp	/^void NaiveBayesClassifier::debug() $/;"	f	class:NaiveBayesClassifier
+estimateParameters	naiveBayes.cpp	/^void NaiveBayesClassifier::estimateParameters()$/;"	f	class:NaiveBayesClassifier
+getProb	naiveBayes.h	/^        pair<int, double> getProb(const vector<double>& single) {$/;"	f	class:NaiveBayesClassifier
+index	main.cpp	/^    int index;$/;"	m	struct:Pred	file:
+inst	naiveBayes.h	/^        vector<vector<double> > inst;$/;"	m	class:NaiveBayesClassifier
+label	main.cpp	/^    int label;$/;"	m	struct:Pred	file:
+main	main.cpp	/^int main()$/;"	f
+main	test.cpp	/^int main()$/;"	f
+mean	naiveBayes.h	/^        vector<vector<double> > mean;$/;"	m	class:NaiveBayesClassifier
+operator <	main.cpp	/^    bool operator<(const Pred& rhs) const {$/;"	f	struct:Pred
+operator <=	main.cpp	/^    bool operator<=(const Pred& rhs) const {$/;"	f	struct:Pred
+operator >	main.cpp	/^    bool operator>(const Pred& rhs) const {$/;"	f	struct:Pred
+operator >	test.cpp	/^    bool operator>(const XX& rhs) const {$/;"	f	struct:XX
+operator >=	main.cpp	/^    bool operator>=(const Pred& rhs) const {$/;"	f	struct:Pred
+prob	main.cpp	/^    double prob;$/;"	m	struct:Pred	file:
+var	naiveBayes.h	/^        vector<vector<double> > var;$/;"	m	class:NaiveBayesClassifier
+weight	naiveBayes.h	/^        vector<double> weight;$/;"	m	class:NaiveBayesClassifier
+x	test.cpp	/^    int x;$/;"	m	struct:XX	file:
