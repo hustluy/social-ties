@@ -1,0 +1,60 @@
+1th test
+the number of sample(svm=bayes): 759
+the nubmer of sample(svm!=bayes): 24
+confusion matrix
+709 20 
+14 16 
+2th test
+the number of sample(svm=bayes): 737
+the nubmer of sample(svm!=bayes): 46
+confusion matrix
+717 2 
+8 10 
+3th test
+the number of sample(svm=bayes): 696
+the nubmer of sample(svm!=bayes): 87
+confusion matrix
+675 8 
+11 2 
+4th test
+the number of sample(svm=bayes): 722
+the nubmer of sample(svm!=bayes): 61
+confusion matrix
+686 14 
+8 14 
+5th test
+the number of sample(svm=bayes): 744
+the nubmer of sample(svm!=bayes): 39
+confusion matrix
+723 3 
+10 8 
+6th test
+the number of sample(svm=bayes): 707
+the nubmer of sample(svm!=bayes): 76
+confusion matrix
+677 9 
+7 14 
+7th test
+the number of sample(svm=bayes): 783
+the nubmer of sample(svm!=bayes): 0
+confusion matrix
+0 745 
+0 38 
+8th test
+the number of sample(svm=bayes): 695
+the nubmer of sample(svm!=bayes): 88
+confusion matrix
+668 12 
+13 2 
+9th test
+the number of sample(svm=bayes): 753
+the nubmer of sample(svm!=bayes): 30
+confusion matrix
+721 6 
+12 14 
+10th test
+the number of sample(svm=bayes): 703
+the nubmer of sample(svm!=bayes): 80
+confusion matrix
+695 0 
+8 0 

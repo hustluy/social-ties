@@ -25,6 +25,7 @@ UpdateBayes	main.cpp	/^NaiveBayesClassifier UpdateBayes(const vector<vector<doub
 UpdateData	main.cpp	/^void UpdateData(vector<vector<double> >& train, vector<vector<double> >& test,$/;"	f
 UpdateSVM	main.cpp	/^svm_model UpdateSVM(const vector<vector<double> >& train, $/;"	f
 Work	main.cpp	/^void Work()$/;"	f
+Work	test.cpp	/^void Work()$/;"	f
 XX	test.cpp	/^    XX(int _x):x(_x){$/;"	f	struct:XX
 XX	test.cpp	/^struct XX {$/;"	s	file:
 calculateProb	naiveBayes.cpp	/^pair<double, double> NaiveBayesClassifier::calculateProb(const vector<double>& single)$/;"	f	class:NaiveBayesClassifier

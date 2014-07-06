@@ -14,6 +14,9 @@
 using namespace std;
 using namespace boost;
 
+const int low = 10;
+const int high = 50;
+
 struct Pred {
     int index;
     int label;
@@ -59,7 +62,8 @@ vector<Pred> TopK(const vector<Pred>& pred, double thresh)
 
 vector<Pred> TopK(const vector<Pred>& pred, int k)
 {
-    return vector<Pred>(pred.begin(), pred.begin() + k);
+    int n = (pred.size() < k)?pred.size():k;
+    return vector<Pred>(pred.begin(), pred.begin() + n);
 }
 
 void LoadData(const char* file, vector<vector<double> >& inst)
@@ -184,6 +188,16 @@ svm_model UpdateSVM(const vector<vector<double> >& train,
     return svmModel;
 }
 
+int Flatten(int low, int high, int val)
+{
+    if( low > high )
+        return val<high?val:high;
+    if( val < low )
+        return low;
+    if( val > high )
+        return high;
+}
+
 vector<Pred> SVMMark(svm_model* svmPtr,
         const vector<vector<double> >& test, const vector<bool>& used)
 {
@@ -202,7 +216,10 @@ vector<Pred> SVMMark(svm_model* svmPtr,
         }
     }
     sort(pred.begin(), pred.end(), greater<Pred>());
-    vector<Pred> ans = TopK(pred, 0.95);
+    vector<Pred> ans = TopK(pred, 0.98);
+    int sz = Flatten(low, high, ans.size());
+    if( sz != ans.size() )
+        ans = TopK(pred, sz);
     cout << "the number of instance svm marked is " << ans.size() << endl;
     return ans;
 }
@@ -228,7 +245,11 @@ vector<Pred> BayesMark(NaiveBayesClassifier& nbc,
         }
     }
     sort(pred.begin(), pred.end(), greater<Pred>());
-    vector<Pred> ans = TopK(pred, 0.95);
+    int n = pred.size();
+    vector<Pred> ans = TopK(pred, 0.9999);
+    int sz = Flatten(low, high, ans.size());
+    if( sz != ans.size() )
+        ans = TopK(pred, sz);
     cout << "the number of instance bayes marked is " << ans.size() << endl;
     return ans;
 }
@@ -254,7 +275,7 @@ pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& tra
     vector<double> nbTrainW(nbTrain.size(), 1.0), svmTrainW(svmTrain.size(), 1.0);
     vector<vector<double> > nbTest(test), svmTest(test);
     vector<bool> nbUsed(test.size(), false), svmUsed(test.size(), false);
-    int maxIter = 10;
+    int maxIter = 30;
     int iter = 0;
     size_t powi = 1;
     double eps = 0.001;
@@ -286,6 +307,9 @@ pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& tra
 void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,
         vector<vector<double> >& test)
 {
+    static int count = 0;
+    ofstream fout("ans", ofstream::app);
+    fout << ++count << "th test" << endl;
     size_t sameCnt = 0, diffCnt = 0;
     vector<vector<double> > conf(2, vector<double>(2, 0));
     for(size_t i = 0; i < test.size(); ++i)
@@ -301,16 +325,18 @@ void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,
         }
         else diffCnt += 1;
     }
-    cout << "the number of sample(svm=bayes): " << sameCnt << endl;
-    cout << "the nubmer of sample(svm!=bayes): " << diffCnt << endl;
-    cout << "confusion matrix" << endl;
+    fout << "the number of sample(svm=bayes): " << sameCnt << endl;
+    fout << "the nubmer of sample(svm!=bayes): " << diffCnt << endl;
+    fout << "confusion matrix" << endl;
     for(size_t i = 0; i < 2; ++i)
     {
         for(size_t j = 0; j < 2; ++j)
-            cout << conf[i][j] << " ";
-        cout << endl;
+            fout << conf[i][j] << " ";
+        fout << endl;
     }
+    fout.close();
 }
+
 void CrossValidation(int folds)
 {
     vector<vector<double> > inst;
@@ -318,6 +344,7 @@ void CrossValidation(int folds)
     LoadData("data.csv", inst);
     
     // split the data into train and test
+    system("rm ans");
     for(int k = 0; k < folds; ++k)
     {
         vector<vector<double> > train;
