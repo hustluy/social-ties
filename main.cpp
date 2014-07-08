@@ -10,12 +10,16 @@
 #include "libsvm/svm.cpp"
 #include "naiveBayes.h"
 #include "naiveBayes.cpp"
+#include <unistd.h>
 
 using namespace std;
 using namespace boost;
 
 const int low = 10;
 const int high = 50;
+const double times = 2.9;// the weight ratio between 1 label and 0 label
+const double total = 10, py_1 = 2.0/10.0;
+vector<pair<int, int> > edges;
 
 struct Pred {
     int index;
@@ -40,10 +44,10 @@ struct Pred {
     };
 };
 
-void Inst2SVMNode(const vector<double>& single, svm_node*& nodePtr)
+void Inst2SVMNode(const vector<double>& single, svm_node* nodePtr)
 {
     int n = single.size() - 1;
-    nodePtr = new svm_node[n+1];
+    //nodePtr = new svm_node[n+1];
     for(int i = 0; i < n; ++i)
     {
         nodePtr[i].index = i;
@@ -66,6 +70,38 @@ vector<Pred> TopK(const vector<Pred>& pred, int k)
     return vector<Pred>(pred.begin(), pred.begin() + n);
 }
 
+vector<Pred> TopK(const vector<Pred>& pred, double tot, double py)
+{
+    int num[2];
+    num[1] = ceil(tot*py);
+    num[0] = tot - num[1];
+    vector<Pred> ans;
+    for(size_t i = 0; i < pred.size(); ++i)
+    {
+        if( num[0] && pred[i].label == 0 )
+        {
+            ans.push_back( pred[i] );
+            num[0]--;
+        }
+        if( num[1] && pred[i].label == 1 )
+        {
+            ans.push_back( pred[i] );
+            num[1]--;
+        }
+        if( !num[0] && !num[1] )
+            break;
+    }
+    return ans;
+}
+
+pair<int, int> ToIntPair(const string& left, const string& right)
+{
+    pair<int, int> ans;
+    istringstream iss(left + " " + right);
+    iss >> ans.first >> ans.second;
+    return ans;
+}
+
 void LoadData(const char* file, vector<vector<double> >& inst)
 {
     ifstream fin(file);
@@ -83,6 +119,9 @@ void LoadData(const char* file, vector<vector<double> >& inst)
     {
         vector<string> temp;
         split(temp, line, is_any_of(", \t"));
+
+        edges.push_back( ToIntPair(temp[0], temp[1]));
+
         vector<double> dval;
         for(size_t i = 2; i < temp.size(); ++i)
         {
@@ -169,8 +208,12 @@ svm_parameter InitSVMPara(const svm_problem& svmPro,
 	svmPara.shrinking = 1;
 	svmPara.probability = 1;
 	svmPara.nr_weight = 0;
-	svmPara.weight_label = NULL;
-	svmPara.weight = NULL;
+    svmPara.weight_label = NULL;
+    svmPara.weight = NULL;
+    //svmPara.weight_label[0] = 0;
+    //svmPara.weight_label[1] = 1;
+    //svmPara.weight[0] = 1;
+    //svmPara.weight[1] = svmPara.weight[0] * times;
     const char *ptr = svm_check_parameter(&svmPro, &svmPara);
     if( ptr != NULL )
         throw invalid_argument(ptr);
@@ -198,10 +241,21 @@ int Flatten(int low, int high, int val)
         return high;
 }
 
+pair<int, int> Info(const vector<Pred>& v)
+{
+    pair<int, int> ans(0, 0);
+    for(size_t i = 0; i < v.size(); ++i)
+        if(v[i].label == 0)
+            ans.first++;
+        else ans.second++;
+    return ans;
+}
+
 vector<Pred> SVMMark(svm_model* svmPtr,
         const vector<vector<double> >& test, const vector<bool>& used)
 {
     int numClass = svm_get_nr_class(svmPtr);
+    svm_node *x = new svm_node[test[0].size()];
     double *probs = new double[numClass];
     vector<Pred> pred;
 
@@ -209,18 +263,24 @@ vector<Pred> SVMMark(svm_model* svmPtr,
     {
         if( !used[i] )
         {
-            svm_node* x;
             Inst2SVMNode(test[i], x);
             int label = svm_predict_probability(svmPtr, x, probs);
             pred.push_back( Pred(i, label, probs[0]>probs[1]?probs[0]:probs[1]) );
         }
     }
+
+    delete []x;
+    delete []probs;
+
     sort(pred.begin(), pred.end(), greater<Pred>());
-    vector<Pred> ans = TopK(pred, 0.98);
-    int sz = Flatten(low, high, ans.size());
-    if( sz != ans.size() )
-        ans = TopK(pred, sz);
-    cout << "the number of instance svm marked is " << ans.size() << endl;
+    vector<Pred> ans = TopK(pred, total, py_1);
+    //vector<Pred> ans = TopK(pred, 0.98);
+    //int sz = Flatten(low, high, ans.size());
+    //if( sz != ans.size() )
+        //ans = TopK(pred, sz);
+    //cout << "the number of instance svm marked is " << ans.size();
+    pair<int, int> count = Info(ans);
+    cout << " 0: " << count.first << " 1: " << count.second << endl;
     return ans;
 }
 
@@ -231,6 +291,7 @@ NaiveBayesClassifier UpdateBayes(const vector<vector<double> >& train,
     nbc.estimateParameters();
     return nbc;
 }
+
 
 vector<Pred> BayesMark(NaiveBayesClassifier& nbc,
         const vector<vector<double> >& test, const vector<bool>& used)
@@ -246,11 +307,14 @@ vector<Pred> BayesMark(NaiveBayesClassifier& nbc,
     }
     sort(pred.begin(), pred.end(), greater<Pred>());
     int n = pred.size();
-    vector<Pred> ans = TopK(pred, 0.9999);
-    int sz = Flatten(low, high, ans.size());
-    if( sz != ans.size() )
-        ans = TopK(pred, sz);
-    cout << "the number of instance bayes marked is " << ans.size() << endl;
+    vector<Pred> ans = TopK(pred, total, py_1);
+    //vector<Pred> ans = TopK(pred, 0.9999);
+    //int sz = Flatten(low, high, ans.size());
+    //if( sz != ans.size() )
+        //ans = TopK(pred, sz);
+    //cout << "the number of instance bayes marked is " << ans.size();
+    pair<int, int> count = Info(ans);
+    cout << " 0: " << count.first << " 1: " << count.second << endl;
     return ans;
 }
 
@@ -268,6 +332,25 @@ void UpdateData(vector<vector<double> >& train, vector<vector<double> >& test,
     }
 }
 
+void AdjustWeight(const vector<vector<double> >& data, 
+        vector<double>& weight)
+{
+    for(size_t i = 0; i < weight.size(); ++i)
+    {
+        if( data[i].back() == 1 )
+            weight[i] *= times;
+    }
+}
+
+void AdjustWeight(const vector<Pred>& data, vector<double>& weight)
+{
+    for(size_t i = 0; i < weight.size(); ++i)
+    {
+        if( data[i].label == 1 )
+            weight[i] *= times;
+    }
+}
+
 pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& train, 
         const vector<vector<double> >& test)
 {
@@ -275,10 +358,14 @@ pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& tra
     vector<double> nbTrainW(nbTrain.size(), 1.0), svmTrainW(svmTrain.size(), 1.0);
     vector<vector<double> > nbTest(test), svmTest(test);
     vector<bool> nbUsed(test.size(), false), svmUsed(test.size(), false);
-    int maxIter = 30;
+    int maxIter = 50;
     int iter = 0;
     size_t powi = 1;
     double eps = 0.001;
+
+    AdjustWeight(nbTrain, nbTrainW);
+    AdjustWeight(svmTrain, svmTrainW);
+
     while( true )
     {
         svm_model svmModel = UpdateSVM(svmTrain, svmTrainW);
@@ -287,8 +374,13 @@ pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& tra
         vector<Pred> nbMark = BayesMark(nbc, nbTest, svmUsed);
 
         UpdateData(nbTrain, nbTest, nbUsed, svmMark);
-        nbTrainW.insert(nbTrainW.end(), svmMark.size(), powi*eps);
+        vector<double> weight(svmMark.size(), powi*eps);
+        AdjustWeight(svmMark, weight);
+        nbTrainW.insert(nbTrainW.end(), weight.begin(), weight.end());
+
         UpdateData(svmTrain, svmTest, svmUsed, nbMark);
+        weight.assign(nbMark.size(), powi*eps);
+        AdjustWeight(nbMark, weight);
         svmTrainW.insert(svmTrainW.end(), nbMark.size(), powi*eps);
 
         if( ++iter == maxIter )
@@ -305,26 +397,54 @@ pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& tra
 }
 
 void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,
-        vector<vector<double> >& test)
+        vector<vector<double> >& inst, int k, int folds)
 {
     static int count = 0;
     ofstream fout("ans", ofstream::app);
     fout << ++count << "th test" << endl;
     size_t sameCnt = 0, diffCnt = 0;
     vector<vector<double> > conf(2, vector<double>(2, 0));
-    for(size_t i = 0; i < test.size(); ++i)
+    svm_node *x = new svm_node[inst[0].size()];
+    double *probs = new double[2];
+
+    char outPath[80];
+    sprintf(outPath, "result/out%d", count);
+    ofstream fle(outPath);
+
+    for(size_t i = 0; i < inst.size(); ++i)
     {
-        svm_node *x;
-        Inst2SVMNode(test[i], x);
-        int svmPred = svm_predict(&svmModel, x);
-        int nbPred = nbc.classify(test[i]);
+        fle << edges[i].first << " " << edges[i].second << " ";
+        if( i%folds == k )
+        {
+            fle << 1 << " " << inst[i].back() << endl;
+            continue;
+        }
+
+        fle << 0 << " ";
+
+        Inst2SVMNode(inst[i], x);
+        int svmPred = svm_predict_probability(&svmModel, x, probs);
+        if( svmPred == 0 )
+            fle << std::max(probs[0], probs[1]) << " " << std::min(probs[0], probs[1]) << " ";
+        else fle << std::min(probs[0], probs[1]) << " " << std::max(probs[0], probs[1]) << " ";
+
+        //int nbPred = nbc.classify(inst[i]);
+        pair<int, double> temp = nbc.getProb(inst[i]);
+        int nbPred = temp.first;
+        if( nbPred == 0 )
+            fle << temp.second << " " << (1 - temp.second) << endl;
+        else fle << (1 - temp.second) << " " << temp.second << endl;
+
         if( svmPred == nbPred )
         {
             sameCnt += 1;
-            conf[test[i].back()][nbPred] += 1;
+            conf[inst[i].back()][nbPred] += 1;
         }
         else diffCnt += 1;
     }
+
+    delete x;
+
     fout << "the number of sample(svm=bayes): " << sameCnt << endl;
     fout << "the nubmer of sample(svm!=bayes): " << diffCnt << endl;
     fout << "confusion matrix" << endl;
@@ -334,13 +454,75 @@ void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,
             fout << conf[i][j] << " ";
         fout << endl;
     }
+    for(size_t i = 0; i < 2; ++i)
+    {
+        double preci = conf[i][i]/(conf[0][i] + conf[1][i]);
+        double recall = conf[i][i]/(conf[i][0] + conf[i][1]);
+        fout << "label " << i << " | Precision : " << preci;
+        fout << " | Recall : " << recall << endl;
+    }
+    fout << "total precision : " << (conf[0][0] + conf[1][1])/sameCnt << endl;
+    fle.close();
     fout.close();
+}
+
+void Info(const vector<vector<double> >& data)
+{
+    ofstream fout("ans", ofstream::app);
+    vector<int> count(2, 0);
+    for(size_t i = 0; i < data.size(); ++i)
+    {
+        count[data[i].back()]++;
+    }
+    fout << "number of label 0: " << count[0] << endl;
+    fout << "number of label 1: " << count[1] << endl;
+    fout.close();
+}
+
+void Test(const vector<vector<double> >& train, 
+        const vector<vector<double> >& test)
+{
+    static int cnt = 0;
+    cout << "---------" << cnt << "th test-----------" << endl;
+    svm_model svmModel = UpdateSVM(train, vector<double>(train.size(), 1.0));
+    NaiveBayesClassifier nbc(train, vector<double>(train.size(), 1.0));
+    nbc.estimateParameters();
+    vector<vector<int> > svmConf(2, vector<int>(2, 0));
+    vector<vector<int> > nbcConf(2, vector<int>(2, 0));
+    double *probs = new double[2];
+    svm_node *x = new svm_node[test[0].size()];
+
+    for(size_t i = 0; i < test.size(); ++i)
+    {
+        int r = test[i].back();
+        Inst2SVMNode(test[i], x);
+        //int c = svm_predict(&svmModel, x);
+        int c = svm_predict_probability(&svmModel, x, probs);
+        svmConf[r][c]++;
+        c = nbc.classify(test[i]);
+        nbcConf[r][c]++;
+    }
+
+    delete []x;
+    delete []probs;
+
+    for(int i = 0; i < 2; ++i)
+    {
+        for(int j = 0; j < 2; ++j)
+            cout << svmConf[i][j] << " ";
+        cout << endl;
+    }
+    for(int i = 0; i < 2; ++i)
+    {
+        for(int j = 0; j < 2; ++j)
+            cout << nbcConf[i][j] << " ";
+        cout << endl;
+    }
 }
 
 void CrossValidation(int folds)
 {
     vector<vector<double> > inst;
-    vector<double> minVal, maxVal;
     LoadData("data.csv", inst);
     
     // split the data into train and test
@@ -355,8 +537,9 @@ void CrossValidation(int folds)
                 train.push_back(inst.at(i));
             else test.push_back(inst.at(i));
         }
+        Info(train);
         pair<svm_model, NaiveBayesClassifier> coModel = CoTrain(train, test);
-        TestCoModel(coModel.first, coModel.second, test);
+        TestCoModel(coModel.first, coModel.second, inst, k, folds);
     }
 }
 
@@ -393,6 +576,7 @@ void Work()
 {
     CrossValidation(10);
 }
+
 int main()
 {
     Work();

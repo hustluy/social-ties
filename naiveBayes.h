@@ -12,6 +12,7 @@
 #include <numeric>
 #include <cstddef>
 #include <cmath>
+#include <unistd.h>
 
 using namespace std;
 using namespace boost;
@@ -34,6 +35,11 @@ class NaiveBayesClassifier {
         pair<int, double> getProb(const vector<double>& single) {
             pair<double, double> prob = calculateProb(single);
             double sum = prob.first + prob.second;
+            if( fabs(sum) < 1e-10 )
+            {
+                cout << "WARNING:分母为零" << endl;
+                sleep(10);
+            }
             if( prob.first >= prob.second )
                 return pair<int, double>(0, prob.first/sum);
             else return pair<int, double>(1, prob.second/sum);

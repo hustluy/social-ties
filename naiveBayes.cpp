@@ -26,6 +26,10 @@ void NaiveBayesClassifier::estimateParameters()
             mean[i][j] /= totalWeight[i];
             var[i][j] = (var[i][j] - 
                     totalWeight[i]*mean[i][j]*mean[i][j])/totalWeight[i];
+
+            // avoid the denominator as 0 when calculating the probability 
+            if( fabs(var[i][j]) < 1e-8 )
+                var[i][j] = 1e-8;
         }
     }
     
@@ -49,7 +53,13 @@ pair<double, double> NaiveBayesClassifier::calculateProb(const vector<double>& s
             prob[c] += first + second;
         }
     }
-    return pair<double, double>(exp(prob[0]), exp(prob[1]));
+    //if( prob[1] - prob[0] >= 10 )
+        //return pair<double, double>(0.0, 1.0);
+    //else if( prob[1] - prob[0] <= -10 )
+        //return pair<double, double>(1.0, 0.0);
+    //else 
+    double p0 = 1.0/(1 + exp(prob[1] - prob[0]));
+    return pair<double, double>(p0, 1 - p0);
 }
 
 void NaiveBayesClassifier::debug() 

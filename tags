@@ -7,9 +7,12 @@
 BayesMark	main.cpp	/^vector<Pred> BayesMark(NaiveBayesClassifier& nbc,$/;"	f
 CoTrain	main.cpp	/^pair<svm_model, NaiveBayesClassifier> CoTrain(const vector<vector<double> >& train, $/;"	f
 CrossValidation	main.cpp	/^void CrossValidation(int folds)$/;"	f
+Flatten	main.cpp	/^int Flatten(int low, int high, int val)$/;"	f
+Info	main.cpp	/^pair<int, int> Info(const vector<Pred>& v)$/;"	f
+Info	main.cpp	/^void Info(const vector<vector<double> >& data)$/;"	f
 InitSVMPara	main.cpp	/^svm_parameter InitSVMPara(const svm_problem& svmPro,$/;"	f
 InitSVMPro	main.cpp	/^svm_problem InitSVMPro(const vector<vector<double> >& inst)$/;"	f
-Inst2SVMNode	main.cpp	/^void Inst2SVMNode(const vector<double>& single, svm_node*& nodePtr)$/;"	f
+Inst2SVMNode	main.cpp	/^void Inst2SVMNode(const vector<double>& single, svm_node* nodePtr)$/;"	f
 LoadData	main.cpp	/^void LoadData(const char* file, vector<vector<double> >& inst)$/;"	f
 NAIVE_BAYES_H	naiveBayes.h	2;"	d
 NaiveBayesClassifier	naiveBayes.h	/^        NaiveBayesClassifier(const vector<vector<double> >& _inst, $/;"	f	class:NaiveBayesClassifier
@@ -18,6 +21,7 @@ Pred	main.cpp	/^    Pred(int _index, int _label, double _prob) {$/;"	f	struct:Pr
 Pred	main.cpp	/^struct Pred {$/;"	s	file:
 SVMMark	main.cpp	/^vector<Pred> SVMMark(svm_model* svmPtr,$/;"	f
 Test	main.cpp	/^void Test()$/;"	f
+Test	main.cpp	/^void Test(const vector<vector<double> >& train, $/;"	f
 TestCoModel	main.cpp	/^void TestCoModel(svm_model& svmModel, NaiveBayesClassifier& nbc,$/;"	f
 TopK	main.cpp	/^vector<Pred> TopK(const vector<Pred>& pred, double thresh)$/;"	f
 TopK	main.cpp	/^vector<Pred> TopK(const vector<Pred>& pred, int k)$/;"	f
@@ -33,9 +37,11 @@ classify	naiveBayes.h	/^        int classify(const vector<double>& single) {$/;"
 debug	naiveBayes.cpp	/^void NaiveBayesClassifier::debug() $/;"	f	class:NaiveBayesClassifier
 estimateParameters	naiveBayes.cpp	/^void NaiveBayesClassifier::estimateParameters()$/;"	f	class:NaiveBayesClassifier
 getProb	naiveBayes.h	/^        pair<int, double> getProb(const vector<double>& single) {$/;"	f	class:NaiveBayesClassifier
+high	main.cpp	/^const int high = 50;$/;"	v
 index	main.cpp	/^    int index;$/;"	m	struct:Pred	file:
 inst	naiveBayes.h	/^        vector<vector<double> > inst;$/;"	m	class:NaiveBayesClassifier
 label	main.cpp	/^    int label;$/;"	m	struct:Pred	file:
+low	main.cpp	/^const int low = 10;$/;"	v
 main	main.cpp	/^int main()$/;"	f
 main	test.cpp	/^int main()$/;"	f
 mean	naiveBayes.h	/^        vector<vector<double> > mean;$/;"	m	class:NaiveBayesClassifier
@@ -45,6 +51,7 @@ operator >	main.cpp	/^    bool operator>(const Pred& rhs) const {$/;"	f	struct:P
 operator >	test.cpp	/^    bool operator>(const XX& rhs) const {$/;"	f	struct:XX
 operator >=	main.cpp	/^    bool operator>=(const Pred& rhs) const {$/;"	f	struct:Pred
 prob	main.cpp	/^    double prob;$/;"	m	struct:Pred	file:
+times	main.cpp	/^const double times = 2.0;$/;"	v
 var	naiveBayes.h	/^        vector<vector<double> > var;$/;"	m	class:NaiveBayesClassifier
 weight	naiveBayes.h	/^        vector<double> weight;$/;"	m	class:NaiveBayesClassifier
 x	test.cpp	/^    int x;$/;"	m	struct:XX	file:

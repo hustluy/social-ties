@@ -1,60 +1,110 @@
+number of label 0: 82
+number of label 1: 5
 1th test
-the number of sample(svm=bayes): 759
-the nubmer of sample(svm!=bayes): 24
+the number of sample(svm=bayes): 769
+the nubmer of sample(svm!=bayes): 14
 confusion matrix
-709 20 
-14 16 
+674 60 
+12 23 
+label 0 | Precision : 0.982507 | Recall : 0.918256
+label 1 | Precision : 0.277108 | Recall : 0.657143
+total precision : 0.906372
+number of label 0: 82
+number of label 1: 5
 2th test
 the number of sample(svm=bayes): 737
 the nubmer of sample(svm!=bayes): 46
 confusion matrix
-717 2 
-8 10 
+688 18 
+8 23 
+label 0 | Precision : 0.988506 | Recall : 0.974504
+label 1 | Precision : 0.560976 | Recall : 0.741935
+total precision : 0.964722
+number of label 0: 83
+number of label 1: 4
 3th test
-the number of sample(svm=bayes): 696
-the nubmer of sample(svm!=bayes): 87
+the number of sample(svm=bayes): 705
+the nubmer of sample(svm!=bayes): 78
 confusion matrix
-675 8 
-11 2 
+666 16 
+3 20 
+label 0 | Precision : 0.995516 | Recall : 0.97654
+label 1 | Precision : 0.555556 | Recall : 0.869565
+total precision : 0.97305
+number of label 0: 83
+number of label 1: 4
 4th test
+the number of sample(svm=bayes): 726
+the nubmer of sample(svm!=bayes): 57
+confusion matrix
+657 42 
+4 23 
+label 0 | Precision : 0.993949 | Recall : 0.939914
+label 1 | Precision : 0.353846 | Recall : 0.851852
+total precision : 0.936639
+number of label 0: 83
+number of label 1: 4
+5th test
+the number of sample(svm=bayes): 730
+the nubmer of sample(svm!=bayes): 53
+confusion matrix
+665 39 
+6 20 
+label 0 | Precision : 0.991058 | Recall : 0.944602
+label 1 | Precision : 0.338983 | Recall : 0.769231
+total precision : 0.938356
+number of label 0: 83
+number of label 1: 4
+6th test
+the number of sample(svm=bayes): 726
+the nubmer of sample(svm!=bayes): 57
+confusion matrix
+665 32 
+7 22 
+label 0 | Precision : 0.989583 | Recall : 0.954089
+label 1 | Precision : 0.407407 | Recall : 0.758621
+total precision : 0.946281
+number of label 0: 83
+number of label 1: 4
+7th test
 the number of sample(svm=bayes): 722
 the nubmer of sample(svm!=bayes): 61
 confusion matrix
-686 14 
-8 14 
-5th test
-the number of sample(svm=bayes): 744
-the nubmer of sample(svm!=bayes): 39
-confusion matrix
-723 3 
-10 8 
-6th test
-the number of sample(svm=bayes): 707
-the nubmer of sample(svm!=bayes): 76
-confusion matrix
-677 9 
-7 14 
-7th test
-the number of sample(svm=bayes): 783
-the nubmer of sample(svm!=bayes): 0
-confusion matrix
-0 745 
-0 38 
+645 51 
+5 21 
+label 0 | Precision : 0.992308 | Recall : 0.926724
+label 1 | Precision : 0.291667 | Recall : 0.807692
+total precision : 0.922438
+number of label 0: 83
+number of label 1: 4
 8th test
-the number of sample(svm=bayes): 695
-the nubmer of sample(svm!=bayes): 88
+the number of sample(svm=bayes): 747
+the nubmer of sample(svm!=bayes): 36
 confusion matrix
-668 12 
-13 2 
+666 54 
+5 22 
+label 0 | Precision : 0.992548 | Recall : 0.925
+label 1 | Precision : 0.289474 | Recall : 0.814815
+total precision : 0.921017
+number of label 0: 83
+number of label 1: 4
 9th test
-the number of sample(svm=bayes): 753
-the nubmer of sample(svm!=bayes): 30
+the number of sample(svm=bayes): 743
+the nubmer of sample(svm!=bayes): 40
 confusion matrix
-721 6 
-12 14 
+679 33 
+9 22 
+label 0 | Precision : 0.986919 | Recall : 0.953652
+label 1 | Precision : 0.4 | Recall : 0.709677
+total precision : 0.943472
+number of label 0: 83
+number of label 1: 4
 10th test
-the number of sample(svm=bayes): 703
-the nubmer of sample(svm!=bayes): 80
+the number of sample(svm=bayes): 721
+the nubmer of sample(svm!=bayes): 62
 confusion matrix
-695 0 
-8 0 
+646 46 
+6 23 
+label 0 | Precision : 0.990798 | Recall : 0.933526
+label 1 | Precision : 0.333333 | Recall : 0.793103
+total precision : 0.927878

@@ -1,0 +1,40 @@
+1th test
+train : 87 test : 783
+svm=bayes : 769
+svm!=bayes : 14
+2th test
+train : 87 test : 783
+svm=bayes : 737
+svm!=bayes : 46
+3th test
+train : 87 test : 783
+svm=bayes : 705
+svm!=bayes : 78
+4th test
+train : 87 test : 783
+svm=bayes : 726
+svm!=bayes : 57
+5th test
+train : 87 test : 783
+svm=bayes : 730
+svm!=bayes : 53
+6th test
+train : 87 test : 783
+svm=bayes : 726
+svm!=bayes : 57
+7th test
+train : 87 test : 783
+svm=bayes : 722
+svm!=bayes : 61
+8th test
+train : 87 test : 783
+svm=bayes : 747
+svm!=bayes : 36
+9th test
+train : 87 test : 783
+svm=bayes : 743
+svm!=bayes : 40
+10th test
+train : 87 test : 783
+svm=bayes : 721
+svm!=bayes : 62
